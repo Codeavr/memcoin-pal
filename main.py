@@ -9,7 +9,7 @@ def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello, I'm memcoin pal bot, send /balance to see your balance")
 
 def balance(bot, update):
-    response = requests.get(api_url + 'user/' + update.message.chat_id).text
+    response = requests.get(api_url + '/user/' + update.message.chat_id).text
     bot.send_message(chat_id=update.message.chat_id, text=response)
 
 api_url = os.environ['APIURL']
