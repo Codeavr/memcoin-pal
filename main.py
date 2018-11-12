@@ -18,8 +18,11 @@ def balance(bot, update):
     response = requests.get(api_url + '/user/' + str(update.message.chat_id), headers=headers).text
     bot.send_message(chat_id=update.message.chat_id, text=response)
 
-def register_command(dispatcher, command, method):
-    handler = CommandHandler(command, method)
+def transfer(bot, update, args):
+    bot.send_message(chat_id=update.message.chat_id, text=''.join(args))
+
+def register_command(dispatcher, command, method, pass_args=False):
+    handler = CommandHandler(command, method, pass_args=pass_args)
     dispatcher.add_handler(handler)
 
 updater = Updater(token=tg_token)
@@ -27,6 +30,7 @@ dispatcher = updater.dispatcher
 
 register_command(dispatcher, 'start', start)
 register_command(dispatcher, 'balance', balance)
+register_command(dispatcher, 'transfer', transfer, pass_args=True)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
