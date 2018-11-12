@@ -19,7 +19,15 @@ def balance(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=response)
 
 def transfer(bot, update, args):
-    bot.send_message(chat_id=update.message.chat_id, text=''.join(args))
+    if len(args) != 2:
+        answer(bot, update, 'I don\'t understand you, boye')
+    else:
+        payload = {'senderId': update.message.chat_id, 'receiverId': args[0], 'amount': args[1] }
+        response = requests.post(api_url + '/transfer/' + str(update.message.chat_id), data=payload, headers=headers).text
+        bot.send_message(chat_id=update.message.chat_id, text=response)
+
+def answer(bot, context, msg):
+    bot.send_message(chat_id=context.message.chat_id, text=msg)
 
 def register_command(dispatcher, command, method, pass_args=False):
     handler = CommandHandler(command, method, pass_args=pass_args)
