@@ -23,7 +23,7 @@ def transfer(bot, update, args):
         answer(bot, update, 'I don\'t understand you, boye')
     else:
         payload = {'senderId': update.message.chat_id, 'receiverId': args[0], 'amount': args[1] }
-        response = requests.post(api_url + '/transfer/' + str(update.message.chat_id), data=payload, headers=headers).text
+        response = requests.post(api_url + '/transfer', data=payload, headers=headers).text
         bot.send_message(chat_id=update.message.chat_id, text=response)
 
 def answer(bot, context, msg):
