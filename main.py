@@ -15,19 +15,37 @@ if use_proxy:
 
 api = MemcoinAPI(api_url, mem_token)
 
-def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Hello, I'm memcoin pal bot, send /balance to see your balance")
+def start_command(bot, update):
+    msg = [
+        "Hello, I'm memcoin pal bot",
+        "I can manage memcoins for you",
+        "Type /balance to see your balance",
+        "Type /id to get your payment id",
+        "Use '/transfer [id] [amount]' to transfer memcoins to user"
+    ]
+    answer(bot, update, '\n'.join(msg))
 
-def balance(bot, update):
+def balance_command(bot, update):
     response = api.get_user(str(update.message.chat_id))
-    bot.send_message(chat_id=update.message.chat_id, text=response)
+    if response.success:
+        answer(bot, update, f"Your balance: {response.json['balance']}")
+    else:
+        answer(bot, update, 'Something went, wrong..')
 
-def transfer(bot, update, args):
+def transfer_command(bot, update, args):    
     if len(args) != 2:
         answer(bot, update, 'I don\'t understand yu, boye')
     else:
         response = api.transfer(sender_id=update.message.chat_id, receiver_id=args[0], amount=args[1])
-        bot.send_message(chat_id=update.message.chat_id, text=response)
+        if response.success:
+            answer(bot, update, f'Successfully transfered {args[1]} coins')
+        elif response.error == 'NotEnoughCoinsError':
+            answer(bot, update, 'Not enough coins for transfer')
+        elif response.error == 'SendSelfError':
+            answer(bot, update, 'Can\'t transfer coins to yourself')
+
+def id_command(bot, update):
+    answer(bot, update, f"Your id is '{update.message.chat_id}'")
 
 def answer(bot, context, msg):
     bot.send_message(chat_id=context.message.chat_id, text=msg)
@@ -43,9 +61,10 @@ else:
 
 dispatcher = updater.dispatcher
 
-register_command(dispatcher, 'start', start)
-register_command(dispatcher, 'balance', balance)
-register_command(dispatcher, 'transfer', transfer, pass_args=True)
+register_command(dispatcher, 'start', start_command)
+register_command(dispatcher, 'balance', balance_command)
+register_command(dispatcher, 'transfer', transfer_command, pass_args=True)
+register_command(dispatcher, 'id', id_command)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
