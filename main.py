@@ -9,7 +9,7 @@ config = Config()
 api_url = config['APIURL']
 mem_token = config['MEMTOKEN']
 tg_token = config['TOKEN']
-use_proxy = bool(config['USE_PROXY'])
+use_proxy = config['USE_PROXY'] == 'True'
 if use_proxy: 
     proxy = config['PROXY']
 
