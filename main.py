@@ -2,6 +2,7 @@ import logging
 from config import Config
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
+from telegram.ext.filters import *
 from memcoin_api import MemcoinAPI
 
 config = Config()
@@ -51,7 +52,7 @@ def answer(bot, context, msg):
     bot.send_message(chat_id=context.message.chat_id, text=msg)
 
 def register_command(dispatcher, command, method, pass_args=False):
-    handler = CommandHandler(command, method, pass_args=pass_args)
+    handler = CommandHandler(command, method, Filters.private, pass_args=pass_args)
     dispatcher.add_handler(handler)
 
 if use_proxy:
