@@ -17,7 +17,7 @@ api = MemcoinAPI(api_url, mem_token)
 
 def start_command(bot, update):
     msg = [
-        "Hello, I'm memcoin pal bot",
+        "Hello, I'm mempal!",
         "I can manage memcoins for you",
         "Type /balance to see your balance",
         "Type /id to get your payment id",
